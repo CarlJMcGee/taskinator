@@ -8,12 +8,20 @@ var taskFormHandler = function (event) {
   var taskNameInput = document.querySelector("input[name='name']").value;
   var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
+  // validate task info
+  if (!taskNameInput || !taskTypeInput) {
+    alert("You must complete task form before submiting");
+    return false;
+  }
+
   var taskDataObj = {
     name: taskNameInput,
     type: taskTypeInput,
   };
 
   createTaskEl(taskDataObj);
+
+  formEl.reset();
 };
 
 var createTaskEl = function (taskDataObj) {
