@@ -1,5 +1,8 @@
+var taskCounter = 0;
+
 var tasksToDoEl = document.querySelector("#tasks-to-do");
 var formEl = document.querySelector("#task-form");
+var pageContentEl = document.querySelector("#page-content");
 
 var taskFormHandler = function (event) {
   event.preventDefault();
@@ -29,6 +32,9 @@ var createTaskEl = function (taskDataObj) {
   var listItemEl = document.createElement("li");
   listItemEl.className = "task-item";
 
+  // assign task ID
+  listItemEl.setAttribute("data-task-id", taskCounter);
+
   //create div to hold info
   var taskInfoEl = document.createElement("div");
   taskInfoEl.className = "task-info";
@@ -44,8 +50,67 @@ var createTaskEl = function (taskDataObj) {
   // append info to list
   listItemEl.appendChild(taskInfoEl);
 
+  // append actions
+  var taskActionsEl = createTaskActions(taskCounter);
+  listItemEl.appendChild(taskActionsEl);
+
   //append list to body
   tasksToDoEl.appendChild(listItemEl);
+
+  // increase task counter
+  taskCounter++;
+};
+
+var createTaskActions = function (taskId) {
+  var actionContainerEl = document.createElement("div");
+  actionContainerEl.className = "task-actions";
+
+  // edit button
+  var editBtn = document.createElement("button");
+  editBtn.className = "btn edit-btn";
+  editBtn.textContent = "Edit";
+  editBtn.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(editBtn);
+
+  //delete button
+  var deleteBtn = document.createElement("button");
+  deleteBtn.className = "btn delete-btn";
+  deleteBtn.textContent = "Delete";
+  deleteBtn.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(deleteBtn);
+
+  var statusSelectEl = document.createElement("select");
+  statusSelectEl.className = "select-status";
+  statusSelectEl.setAttribute("name", "status-change");
+  statusSelectEl.setAttribute("data-task-id", taskId);
+
+  actionContainerEl.appendChild(statusSelectEl);
+
+  var statusChoices = ["To Do", "In Progress", "Completed"];
+
+  for (i = 0; i < statusChoices.length; i++) {
+    //create option El's
+    var statusOptionEl = document.createElement("option");
+    statusOptionEl.textContent = statusChoices[i];
+    statusOptionEl.setAttribute("value", statusChoices[i]);
+
+    // append to select
+    statusSelectEl.appendChild(statusOptionEl);
+  }
+
+  return actionContainerEl;
+};
+
+var taskbuttonHandler = function (event) {
+  console.log(event.target);
+
+  if (event.target.matches(".delete-btn")) {
+    console.log("clicked button");
+  }
 };
 
 formEl.addEventListener("submit", taskFormHandler);
+
+pageContentEl.addEventListener("click", taskbuttonHandler);
